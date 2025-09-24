@@ -19,13 +19,14 @@ export const Animation = () => {
     }, [lottieRef]);
 
     return (
-        <div className="flex bg-amber-100">
-            <Lottie
-                loop={false}
-                lottieRef={lottieRef}
-                animationData={lottieData}
-                autoPlay
-            />
-        </div>
+        <Lottie
+            loop={false}
+            lottieRef={lottieRef}
+            animationData={lottieData}
+            style={{
+                height: 280,
+            }}
+            autoPlay
+        />
     );
 };

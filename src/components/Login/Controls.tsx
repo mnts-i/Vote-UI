@@ -19,7 +19,7 @@ export const Controls = () => {
                 />
             </label>
 
-            <button className={classNames('btn btn-lg btn-soft btn-secondary', {
+            <button className={classNames('btn btn-lg btn-soft btn-primary', {
                 'btn-disabled': !formState.isValid
             })}>
                 Είσοδος

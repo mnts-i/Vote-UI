@@ -23,9 +23,7 @@ export const Animation = () => {
             loop={false}
             lottieRef={lottieRef}
             animationData={lottieData}
-            style={{
-                height: 280,
-            }}
+            className="portrait:h-[280px] landscape:h-[160px]"
             autoPlay
         />
     );

@@ -248,4 +248,4 @@ const Particles: React.FC<ParticlesProps> = ({
   return <div ref={containerRef} className={`particles-container ${className}`} />;
 };
 
-export default Particles;
+export const Background = Particles;

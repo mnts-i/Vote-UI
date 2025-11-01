@@ -9,9 +9,11 @@ export const loginAction: ActionFunction = async (args) => {
 
     try {
         const formData = await args.request.formData();
-        const { data } = await http.post('/users/login', { token: formData.get('token') });
+        const token = formData.get('token') as string ?? '';
+        
+        await http.post('/users/login', { token });
 
-        localStorage.setItem('t', data);
+        localStorage.setItem('t', token);
 
         return redirect('/');
     } catch (err: any) {

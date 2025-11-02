@@ -9,5 +9,5 @@ export const authorizeMiddleware: MiddlewareFunction = async (_, next) => {
         throw redirect('/login');
     }
 
-    await next();
+    return await next();
 };

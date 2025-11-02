@@ -16,9 +16,9 @@ type AuthenticateResponse = {
     valid: false;
 };
 
-export const authenticateMiddleware: MiddlewareFunction = async (ctx, next) => {
+export const authenticateMiddleware: MiddlewareFunction = async (_ctx, next) => {
     const token = localStorage.getItem('t');
-console.log(ctx)
+
     if (typeof token === 'string') {
         try {
             const { data } = await http.post<AuthenticateResponse>('/users/validate', { token });
@@ -34,5 +34,5 @@ console.log(ctx)
         }
     }
 
-    await next();
+    return await next();
 };

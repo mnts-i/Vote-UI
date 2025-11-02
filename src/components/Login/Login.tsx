@@ -48,7 +48,7 @@ export const Login = () => {
                     onSubmit={handleSubmit(onSubmit)}
                     className="portrait:flex-0 landscape:flex-auto flex flex-col gap-3"
                 >
-                    <label className="input input-lg">
+                    <label className="input input-lg w-auto">
                         <span className="text-gray-400 text-base">
                             Κλειδί
                         </span>

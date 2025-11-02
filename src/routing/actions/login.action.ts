@@ -5,8 +5,6 @@ import { redirect, type ActionFunction } from 'react-router';
 import { http } from 'src/com/http';
 
 export const loginAction: ActionFunction = async (args) => {
-    console.log(args);
-
     try {
         const formData = await args.request.formData();
         const token = formData.get('token') as string ?? '';

@@ -1,36 +1,28 @@
 import { type MiddlewareFunction } from 'react-router';
 
-// Axios instance
-import { http } from 'src/com/http';
-
-// State
-import { store, userAtom } from 'src/store';
-
-// Types
-import type { User } from 'src/types';
-
-type AuthenticateResponse = {
-    valid: true;
-    user: User;
-} | {
-    valid: false;
-};
+// App state
+import { store } from 'src/state/store';
+import { appApi } from 'src/state/api/appApi';
+import { logout, setUser } from 'src/state/slice/app.slice';
 
 export const authenticateMiddleware: MiddlewareFunction = async (_ctx, next) => {
     const token = localStorage.getItem('t');
 
     if (typeof token === 'string') {
         try {
-            const { data } = await http.post<AuthenticateResponse>('/users/validate', { token });
+            const data = await store.dispatch(
+                appApi.endpoints.validate.initiate(token)
+            ).unwrap();
 
-            store.set(userAtom, data.valid ? data.user : null);
+            store.dispatch(
+                setUser(data.valid ? data.user : null)
+            );
 
             if (!data.valid) {
-                localStorage.removeItem('t');
+                store.dispatch(logout());
             }
         } catch (err) {
-            localStorage.removeItem('t');
-            store.set(userAtom, null);
+            store.dispatch(logout());
         }
     }
 

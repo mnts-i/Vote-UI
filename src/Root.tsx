@@ -7,14 +7,19 @@ import './assets/tailwind.css';
 // Application CSS
 import './assets/app.scss';
 
+// Hooks
+import { useSocket } from './com/useSocket';
+
 // Components
 import { Background } from './components/Background';
 import { glassStyles } from './shared';
 
 export const Root = () => {
+	useSocket();
+
 	return (
-		<div className="flex flex-col w-[100dvw] h-[100dvh] overflow-hidden relative">
-			<div className="fixed w-[100dvw] h-[100dvh]">
+		<div className="flex flex-col w-[100dvw] h-[100dvh] overflow-x-hidden relative z-30">
+			<div className="fixed w-[100dvw] h-[100dvh] -z-10">
 				<Background
 					particleCount={400}
 					particleBaseSize={200}

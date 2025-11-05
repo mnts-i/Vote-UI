@@ -1,6 +1,7 @@
 import { createBrowserRouter, redirect } from 'react-router';
 
 // Middlewares
+import { adminMiddleware } from './middlewares/admin.middleware';
 import { authorizeMiddleware } from './middlewares/authorize.middleware';
 import { authenticateMiddleware } from './middlewares/authenticate.middleware';
 
@@ -10,7 +11,11 @@ import { loginAction } from './actions/login.action';
 // Components
 import { Root } from 'src/Root';
 import { Login } from 'src/components/Login';
+import { Voting } from 'src/components/Dashboard/Voting';
 import { Results } from 'src/components/Results';
+import { AcpUsers } from 'src/components/Dashboard/ACP/AcpUsers';
+import { AcpStars } from 'src/components/Dashboard/ACP/AcpStars';
+import { AcpVoting } from 'src/components/Dashboard/ACP/AcpVoting';
 import { Dashboard } from 'src/components/Dashboard';
 
 export const router = createBrowserRouter([
@@ -23,8 +28,8 @@ export const router = createBrowserRouter([
                 path: '/results',
                 Component: Results,
             },
-            { 
-                path: '/login', 
+            {
+                path: '/login',
                 Component: Login,
                 middleware: [async (_, next) => {
                     if (Boolean(localStorage.getItem('t'))) {
@@ -35,10 +40,31 @@ export const router = createBrowserRouter([
                 }],
                 action: loginAction,
             },
-            { 
-                index: true, 
+            {
+                path: '/',
                 Component: Dashboard,
                 middleware: [authorizeMiddleware],
+                children: [
+                    {
+                        index: true,
+                        Component: Voting
+                    },
+                    {
+                        path: '/acp-users',
+                        middleware: [adminMiddleware],
+                        Component: AcpUsers
+                    },
+                    {
+                        path: '/acp-stars',
+                        middleware: [adminMiddleware],
+                        Component: AcpStars,
+                    },
+                    {
+                        path: '/acp-voting',
+                        middleware: [adminMiddleware],
+                        Component: AcpVoting,
+                    }
+                ]
             },
         ]
     }

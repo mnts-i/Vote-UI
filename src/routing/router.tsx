@@ -5,17 +5,14 @@ import { adminMiddleware } from './middlewares/admin.middleware';
 import { authorizeMiddleware } from './middlewares/authorize.middleware';
 import { authenticateMiddleware } from './middlewares/authenticate.middleware';
 
-// Actions
-import { loginAction } from './actions/login.action';
-
 // Components
 import { Root } from 'src/Root';
 import { Login } from 'src/components/Login';
 import { Voting } from 'src/components/Dashboard/Voting';
 import { Results } from 'src/components/Results';
-import { AcpUsers } from 'src/components/Dashboard/ACP/AcpUsers';
-import { AcpStars } from 'src/components/Dashboard/ACP/AcpStars';
-import { AcpVoting } from 'src/components/Dashboard/ACP/AcpVoting';
+import { AcpUsers } from 'src/components/ACP/AcpUsers';
+import { AcpStars } from 'src/components/ACP/AcpStars';
+import { AcpVoting } from 'src/components/ACP/AcpVoting';
 import { Dashboard } from 'src/components/Dashboard';
 
 export const router = createBrowserRouter([
@@ -38,7 +35,6 @@ export const router = createBrowserRouter([
 
                     return await next();
                 }],
-                action: loginAction,
             },
             {
                 path: '/',

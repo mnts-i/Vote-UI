@@ -4,6 +4,9 @@ import { Toaster } from 'react-hot-toast';
 // Tailwind + Daisy UI
 import './assets/tailwind.css';
 
+// React-responsive-modal CSS
+import 'react-responsive-modal/styles.css';
+
 // Application CSS
 import './assets/app.scss';
 

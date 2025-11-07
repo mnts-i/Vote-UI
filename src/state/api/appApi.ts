@@ -30,11 +30,20 @@ export const appApi = createApi({
                 body: { token },
                 method: 'POST'
             })
-        })
+        }),
+
+        deleteAllTokens: build.mutation<{ affected?: number }, undefined>({
+            query: () => ({
+                url: '/tokens/truncate',
+                method: 'DELETE'
+            })
+        }),
     })
 });
 
 export const {
     useLoginMutation,
     useValidateMutation,
+
+    useDeleteAllTokensMutation,
 } = appApi;

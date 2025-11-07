@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from 'src/state/store';
 import { glassStyles } from 'src/shared';
 
 // Components
-import { AcpControls } from './ACP/Controls';
+import { AcpControls } from './AcpControls';
 
 export const Dashboard = () => {
     const navigate = useNavigate();

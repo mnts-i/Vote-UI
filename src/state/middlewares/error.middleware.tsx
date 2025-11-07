@@ -1,21 +1,35 @@
+import get from 'get-value';
 import toast from 'react-hot-toast';
 import { isRejectedWithValue } from '@reduxjs/toolkit';
 import type { MiddlewareAPI, Middleware } from '@reduxjs/toolkit';
 
-/**
- * Log a warning and show a toast!
- */
-export const errorMiddleware: Middleware = (api: MiddlewareAPI) => (next) => (action) => {
-    
-    // RTK Query uses `createAsyncThunk` from redux-toolkit under the hood, so we're able to utilize these matchers!
-    if (isRejectedWithValue(action)) {
-        let message = 'Σφάλμα κατά τη σύνδεση!';
-        console.log(action)
-        // if (typeof err?.response?.data?.message === 'string') {
-        //     message = err.response.data.message;
-        // }
+// State
+import { logout } from '../slice/app.slice';
 
-        toast(message, { id: 'login-failure', icon: '😢' });
+export const errorMiddleware: Middleware = (api: MiddlewareAPI) => (next) => (action) => {
+    if (isRejectedWithValue(action)) {
+
+        // Set the error's toast message
+        let message = 'Σφάλμα κατά τη σύνδεση!';
+
+        const responseMessage = get(action, 'payload.data.message');
+
+        if (typeof responseMessage === 'string') {
+            message = responseMessage;
+        }
+
+        // Logout in case of a 401 error
+        const status = get(action, 'payload.status') ?? undefined;
+
+        if (status === 401) {
+            api.dispatch(logout());
+        }
+
+        // Get the endpoint's name to use it as the toast's ID
+        const endpointName = get(action.meta, 'arg.endpointName') ?? undefined;
+
+        // Show the toast
+        toast(message, { id: endpointName, icon: '😢' });
     }
 
     return next(action);

@@ -1,6 +1,11 @@
+import toast from 'react-hot-toast';
 import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
-import { useFetcher } from 'react-router';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
+
+// State
+import { useLoginMutation } from 'src/state/api/appApi';
 
 // Shared
 import { glassStyles } from 'src/shared';
@@ -13,7 +18,9 @@ type FormInput = {
 };
 
 export const Login = () => {
-    const fetcher = useFetcher();
+    const navigate = useNavigate();
+
+    const [doLogin, { data, isSuccess, isLoading }] = useLoginMutation();
 
     const {
         register,
@@ -24,10 +31,17 @@ export const Login = () => {
     });
 
     const onSubmit = (data: FormInput) => {
-        fetcher.submit(data, { action: '/login', method: 'post' });
+        if (!isLoading) {
+            doLogin(data.token);
+        }
     };
 
-    const isLoading = fetcher.state !== 'idle';
+    useEffect(() => {
+        if (isSuccess && Boolean(data)) {
+            localStorage.setItem('t', data.token);
+            navigate('/');
+        }
+    }, [data, isSuccess]);
 
     return (
         <div className="flex p-5 w-full h-full justify-center items-center overflow-hidden">
@@ -44,7 +58,7 @@ export const Login = () => {
                 </div>
 
                 {/* CONTROLS */}
-                <fetcher.Form
+                <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="portrait:flex-0 landscape:flex-auto flex flex-col gap-3"
                 >
@@ -72,7 +86,7 @@ export const Login = () => {
 
                         Είσοδος
                     </button>
-                </fetcher.Form>
+                </form>
             </div>
         </div >
     );

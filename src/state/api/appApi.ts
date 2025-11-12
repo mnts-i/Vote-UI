@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // Types
-import type { User } from 'src/types';
+import type { Star, User } from 'src/types';
 import type { ValidateResponse } from './types';
 
 export const appApi = createApi({
@@ -14,7 +14,7 @@ export const appApi = createApi({
             return headers;
         },
     }),
-    tagTypes: ['Star', 'User'],
+    tagTypes: ['Star', 'User', 'Token'],
     endpoints: (build) => ({
         login: build.mutation<User, string>({
             query: (token) => ({
@@ -32,11 +32,83 @@ export const appApi = createApi({
             })
         }),
 
+        // # ==================================================================== #
+        // #                                                                      #
+        // #                              TOKENS                                  #
+        // #                                                                      #
+        // # ==================================================================== #
+
+        generateTokens: build.mutation<void, number>({
+            query: (count) => ({
+                url: '/tokens/generate',
+                body: { count },
+                method: 'POST'
+            }),
+            invalidatesTags: (_, error) => !error ? ['Token'] : []
+        }),
+
+        fetchAllTokens: build.query<string[], undefined>({
+            query: () => ({
+                url: '/tokens/all',
+                method: 'GET'
+            }),
+            providesTags: (_, error) => !error ? ['Token'] : [],
+        }),
+
         deleteAllTokens: build.mutation<{ affected?: number }, undefined>({
             query: () => ({
                 url: '/tokens/truncate',
                 method: 'DELETE'
-            })
+            }),
+            invalidatesTags: (_, error) => !error ? ['Token'] : []
+        }),
+
+        // # ==================================================================== #
+        // #                                                                      #
+        // #                               STARS                                  #
+        // #                                                                      #
+        // # ==================================================================== #
+
+        fetchAllStars: build.query<Star[], void>({
+            query: () => ({
+                url: '/stars/all',
+                method: 'GET'
+            }),
+            providesTags: (_, error) => !error ? ['Star'] : [],
+        }),
+
+        fetchStar: build.query<Star, number>({
+            query: (id) => ({
+                url: '/stars/' + id,
+                method: 'GET'
+            }),
+            providesTags: (star, error) => !error && star ? [{ type: 'Star', id: star.id }] : [],
+        }),
+
+        createStar: build.mutation<Star, Omit<Star, 'id'>>({
+            query: (body) => ({
+                url: '/stars',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: (_, error) => !error ? ['Star'] : [],
+        }),
+
+        updateStar: build.mutation<Star, Star>({
+            query: (body) => ({
+                url: '/stars/' + body.id,
+                method: 'PATCH',
+                body,
+            }),
+            invalidatesTags: (_, error) => !error ? ['Star'] : [],
+        }),
+
+        deleteStar: build.mutation<undefined, number>({
+            query: (id) => ({
+                url: '/stars/' + id,
+                method: 'DELETE'
+            }),
+            invalidatesTags: (_, error) => !error ? ['Star'] : [],
         }),
     })
 });
@@ -45,5 +117,17 @@ export const {
     useLoginMutation,
     useValidateMutation,
 
+    useGenerateTokensMutation,
+    useFetchAllTokensQuery,
+    useLazyFetchAllTokensQuery,
     useDeleteAllTokensMutation,
+
+    useFetchAllStarsQuery,
+    useLazyFetchAllStarsQuery,
+    useFetchStarQuery,
+    useLazyFetchStarQuery,
+    useCreateStarMutation,
+    useUpdateStarMutation,
+    useDeleteStarMutation,
+
 } = appApi;

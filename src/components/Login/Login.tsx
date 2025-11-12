@@ -77,9 +77,12 @@ export const Login = () => {
                         />
                     </label>
 
-                    <button className={classNames('btn btn-lg btn-soft btn-primary', {
-                        'btn-disabled': !formState.isValid || isLoading
-                    })}>
+                    <button
+                        disabled={!formState.isValid || isLoading}
+                        className={classNames('btn btn-lg btn-soft btn-primary', {
+                            'btn-disabled': !formState.isValid || isLoading
+                        })}
+                    >
                         {isLoading && (
                             <span className="loading loading-spinner"></span>
                         )}

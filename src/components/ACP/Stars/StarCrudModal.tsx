@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
+import classNames from 'classnames';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useCreateStarMutation, useLazyFetchStarQuery, useUpdateStarMutation } from 'src/state/api/appApi';
-
-// Types
-import type { Star } from 'src/types';
 
 type FormInput = {
     name: string;
@@ -20,12 +19,19 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
     const editMode = id !== undefined;
 
     const {
+        reset,
         register,
         formState,
+        getValues,
         setValue,
         handleSubmit,
     } = useForm<FormInput>({
-        mode: 'all'
+        mode: 'all',
+        defaultValues: {
+            name: '',
+            field: '',
+            color: '',
+        }
     });
 
     const [update, { isLoading: updating, isSuccess: updated }] = useUpdateStarMutation();
@@ -34,7 +40,12 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
 
     const isProcessing = fetching || creating || updating;
 
-    const onSubmit = (data: FormInput) => {
+    const closeModal = useCallback(() => {
+        onClose();
+        reset();
+    }, [onClose, reset]);
+
+    const onFormSubmit = (data: FormInput) => {
         if (!isProcessing) {
             editMode ? update({ id, ...data }) : create(data);
         }
@@ -56,22 +67,76 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
 
     // Close on fetch failure
     useEffect(() => {
-        if (fetchFailed) { onClose(); }
-    }, [fetchFailed, onClose]);
+        if (fetchFailed) { closeModal(); }
+    }, [fetchFailed, closeModal]);
+
+    // Show message on create / update and close modal
+    useEffect(() => {
+        if (created || updated) {
+            const message = created
+                ? 'Το ταλέντο δημιουργήθηκε επιτυχώς!'
+                : 'Οι αλλαγές αποθηκεύτηκαν επιτυχώς!';
+
+            toast(message, { id: 'acp-stars' });
+            closeModal();
+        }
+    }, [created, updated, closeModal]);
 
     return (
         <form
-            onSubmit={handleSubmit(onSubmit)}
+            className="w-[70dvw] max-w-sm flex flex-col gap-1 pt-2"
+            onSubmit={handleSubmit(onFormSubmit)}
         >
-
             <fieldset className="fieldset">
                 <legend className="fieldset-legend">Ονομασία Ταλέντου</legend>
                 <input
                     type="text"
-                    className="input"
+                    readOnly={isProcessing}
+                    className="input w-auto"
                     {...register('name', { minLength: 1, required: true })}
                 />
             </fieldset>
+
+            <fieldset className="fieldset">
+                <legend className="fieldset-legend">Είδος</legend>
+                <input
+                    type="text"
+                    readOnly={isProcessing}
+                    className="input w-auto"
+                    {...register('field')}
+                />
+            </fieldset>
+
+            <fieldset className="fieldset">
+                <legend className="fieldset-legend">Χρώμα</legend>
+                <input
+                    type="color"
+                    readOnly={isProcessing}
+                    className="h-12 w-auto rounded-sm"
+                    {...register('color')}
+                />
+
+                <button
+                    type="button"
+                    onClick={() => setValue('color', '')}
+                    className="btn btn-sm btn-block btn-ghost"
+                >
+                    Κατάργηση χρώματος
+                </button>
+            </fieldset>
+
+            <button
+                disabled={!formState.isValid || isProcessing}
+                className={classNames('btn btn-primary mt-2', {
+                    ['btn-disabled']: !formState.isValid || isProcessing
+                })}
+            >
+                {isProcessing && (
+                    <span className="loading loading-spinner"></span>
+                )}
+
+                {editMode ? 'Αποθήκευση Αλλαγών' : 'Δημιουργία Ταλέντου'}
+            </button>
         </form>
     );
 };

@@ -1,8 +1,12 @@
+import toast from 'react-hot-toast';
 import { FiEdit, FiTrash } from 'react-icons/fi';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 // Types
 import type { Star } from 'src/types';
+
+// State
+import { useDeleteStarMutation } from 'src/state/api/appApi';
 
 // Components
 import { Modal } from 'src/components/Modal';
@@ -13,9 +17,16 @@ type ComponentProps = {
 };
 
 export const StarEntry = ({ star }: ComponentProps) => {
-    const [modalOpened, setModalOpened] = useState(false);
+    const [editModalOpened, setEditModalOpened] = useState(false);
+    const [deleteModalOpened, setDeleteModalOpened] = useState(false);
 
-    const onModalClose = useCallback(() => setModalOpened(false), []);
+    const onModalClose = useCallback(() => setEditModalOpened(false), []);
+
+    const [deleteStar, { isLoading: isDeleting, isSuccess: deleted }] = useDeleteStarMutation();
+
+    useEffect(() => {
+        if (deleted) { toast('Το ταλέντο διαγράφηκε επιτυχώς!', { id: 'acp-stars' }); }
+    }, [deleted]);
 
     return (
         <>
@@ -38,14 +49,14 @@ export const StarEntry = ({ star }: ComponentProps) => {
 
                 <div className="flex gap-2 grow-0">
                     <button
-                        onClick={() => setModalOpened(true)}
+                        onClick={() => setDeleteModalOpened(true)}
                         className="btn btn-error btn-sm btn-square"
                     >
                         <FiTrash size={16} />
                     </button>
 
                     <button
-                        onClick={() => setModalOpened(true)}
+                        onClick={() => setEditModalOpened(true)}
                         className="btn btn-primary btn-sm btn-square"
                     >
                         <FiEdit size={16} />
@@ -53,12 +64,34 @@ export const StarEntry = ({ star }: ComponentProps) => {
                 </div>
             </div>
 
-            {modalOpened && (
-                <Modal open={modalOpened} onClose={onModalClose} closeOnOverlayClick={false} closeOnEsc={false} center>
+            {editModalOpened && (
+                <Modal open={editModalOpened} onClose={onModalClose} closeOnOverlayClick={false} closeOnEsc={false} center>
                     <StarCrudModal
                         id={star.id}
                         onClose={onModalClose}
                     />
+                </Modal>
+            )}
+
+            {deleteModalOpened && (
+                <Modal open={deleteModalOpened} onClose={() => setDeleteModalOpened(false)} center>
+                    <h3 className="font-bold text-lg">Προσοχή!</h3>
+                    <p className="py-6">
+                        Αυτή η ενέργεια θα διαγράψει οριστικά το ταλέντο!
+                    </p>
+                    <div className="flex justify-between">
+                        <button className="btn btn-error" onClick={() => deleteStar(star.id)} disabled={!deleteModalOpened || isDeleting}>
+                            {isDeleting && (
+                                <span className="loading loading-spinner"></span>
+                            )}
+
+                            Διαγραφή
+                        </button>
+
+                        <button className="btn" onClick={() => setDeleteModalOpened(false)}>
+                            Ακύρωση
+                        </button>
+                    </div>
                 </Modal>
             )}
         </>

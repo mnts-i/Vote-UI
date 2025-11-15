@@ -79,6 +79,7 @@ export const AcpUsers = () => {
                     className="input w-auto"
                     min="1"
                     max="1000"
+                    placeholder="Εισάγεται αριθμό κλειδιών (1 - 1000)"
                     value={count}
                     onChange={onCountChange}
                     disabled={generating}

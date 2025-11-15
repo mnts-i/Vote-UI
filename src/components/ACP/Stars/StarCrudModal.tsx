@@ -84,9 +84,13 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
 
     return (
         <form
-            className="w-[70dvw] max-w-sm flex flex-col gap-1 pt-2"
+            className="w-[70dvw] max-w-sm flex flex-col gap-1"
             onSubmit={handleSubmit(onFormSubmit)}
         >
+            <h3 className="font-bold text-lg pb-2">
+                {editMode ? 'Επεξεργασία' : 'Δημιουργία'} ταλέντου
+            </h3>
+
             <fieldset className="fieldset">
                 <legend className="fieldset-legend">Ονομασία Ταλέντου</legend>
                 <input
@@ -135,7 +139,7 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
                     <span className="loading loading-spinner"></span>
                 )}
 
-                {editMode ? 'Αποθήκευση Αλλαγών' : 'Δημιουργία Ταλέντου'}
+                {editMode ? 'Αποθήκευση Αλλαγών' : 'Δημιουργία'}
             </button>
         </form>
     );

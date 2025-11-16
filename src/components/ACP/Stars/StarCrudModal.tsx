@@ -1,7 +1,9 @@
-import classNames from 'classnames';
-import { useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import classNames from 'classnames';
+import { useForm } from 'react-hook-form';
+import { useCallback, useEffect } from 'react';
+
+// State
 import { useCreateStarMutation, useLazyFetchStarQuery, useUpdateStarMutation } from 'src/state/api/appApi';
 
 type FormInput = {
@@ -22,7 +24,6 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
         reset,
         register,
         formState,
-        getValues,
         setValue,
         handleSubmit,
     } = useForm<FormInput>({
@@ -36,7 +37,7 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
 
     const [update, { isLoading: updating, isSuccess: updated }] = useUpdateStarMutation();
     const [create, { isLoading: creating, isSuccess: created }] = useCreateStarMutation();
-    const [fetchStar, { data: loadedStar, isSuccess: fetched, isFetching: fetching, isError: fetchFailed }] = useLazyFetchStarQuery();
+    const [fetchStar, { data: loadedStar, isFetching: fetching, isError: fetchFailed }] = useLazyFetchStarQuery();
 
     const isProcessing = fetching || creating || updating;
 
@@ -84,9 +85,21 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
 
     return (
         <form
-            className="w-[70dvw] max-w-sm flex flex-col gap-1"
+            className="w-[70dvw] max-w-sm flex flex-col gap-1 overflow-hidden"
             onSubmit={handleSubmit(onFormSubmit)}
         >
+            {fetching && (
+                <div
+                    className="flex flex-col gap-4 items-center justify-center absolute top-0 bottom-0 left-0 right-0 bg-slate-500/20 backdrop-blur-[2px] z-50 select-none"
+                >
+                    <div className="loading loading-spinner loading-xl text-primary" />
+
+                    <span className="text-sm text-slate-300 py-2 px-5 bg-slate-600/50 rounded-md">
+                        Φόρτωση ταλέντου...
+                    </span>
+                </div>
+            )}
+
             <h3 className="font-bold text-lg pb-2">
                 {editMode ? 'Επεξεργασία' : 'Δημιουργία'} ταλέντου
             </h3>

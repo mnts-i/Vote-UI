@@ -8,10 +8,10 @@ import { authenticateMiddleware } from './middlewares/authenticate.middleware';
 // Components
 import { Root } from 'src/Root';
 import { Login } from 'src/components/Login';
-import { Voting } from 'src/components/Dashboard/Voting';
 import { Results } from 'src/components/Results';
 import { AcpUsers } from 'src/components/ACP/AcpUsers';
 import { AcpStars } from 'src/components/ACP/AcpStars';
+import { Viewport } from 'src/components/Dashboard/Viewport';
 import { AcpVoting } from 'src/components/ACP/AcpVoting';
 import { Dashboard } from 'src/components/Dashboard';
 
@@ -43,7 +43,7 @@ export const router = createBrowserRouter([
                 children: [
                     {
                         index: true,
-                        Component: Voting
+                        Component: Viewport
                     },
                     {
                         path: '/acp-users',

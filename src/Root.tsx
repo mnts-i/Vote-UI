@@ -1,5 +1,10 @@
+import dayjs from 'dayjs';
 import { Outlet } from 'react-router';
 import { Toaster } from 'react-hot-toast';
+
+// DayJS locale
+import 'dayjs/locale/el';
+dayjs.locale('el');
 
 // Tailwind + Daisy UI
 import './assets/tailwind.css';

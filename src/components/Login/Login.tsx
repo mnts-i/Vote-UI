@@ -1,4 +1,3 @@
-import toast from 'react-hot-toast';
 import classNames from 'classnames';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
@@ -37,7 +36,7 @@ export const Login = () => {
     };
 
     useEffect(() => {
-        if (isSuccess && Boolean(data)) {
+        if (isSuccess && data) {
             localStorage.setItem('t', data.token);
             navigate('/');
         }
@@ -73,7 +72,7 @@ export const Login = () => {
                             className="grow uppercase text-center"
                             autoComplete="off"
                             autoFocus
-                            {...register('token', { maxLength: 12, minLength: 12, required: true })}
+                            {...register('token', { maxLength: 11, minLength: 11, required: true })}
                         />
                     </label>
 

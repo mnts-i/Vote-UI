@@ -9,7 +9,7 @@ import type { State } from 'src/types';
 
 let initialized = false;
 
-const socket = io({ autoConnect: true });
+const socket = io(import.meta.env.DEV ? `http://${window.location.hostname}:54400` : '/', { autoConnect: true });
 
 export const socketMiddleware: Middleware = (api: MiddlewareAPI) => (next) => (action) => {
     if (!initialized) {

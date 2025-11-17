@@ -110,6 +110,34 @@ export const appApi = createApi({
             }),
             invalidatesTags: (_, error) => !error ? ['Star'] : [],
         }),
+
+        // # ==================================================================== #
+        // #                                                                      #
+        // #                               STATE                                  #
+        // #                                                                      #
+        // # ==================================================================== #
+
+        setIdleStage: build.mutation({
+            query: () => ({
+                url: '/state/idle',
+                method: 'POST'
+            }),
+        }),
+
+        setPerformingStage: build.mutation<void, number>({
+            query: (id) => ({
+                url: '/state/performing/' + id,
+                method: 'POST'
+            }),
+        }),
+
+        setVotingStage: build.mutation<void, number>({
+            query: (id) => ({
+                url: '/state/voting/' + id,
+                method: 'POST'
+            }),
+        }),
+
     })
 });
 
@@ -130,4 +158,7 @@ export const {
     useUpdateStarMutation,
     useDeleteStarMutation,
 
+    useSetIdleStageMutation,
+    useSetPerformingStageMutation,
+    useSetVotingStageMutation,
 } = appApi;

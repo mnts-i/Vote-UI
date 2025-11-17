@@ -29,7 +29,7 @@ export interface Performing extends BaseState {
 export interface Voting extends BaseState {
     stage: 'VOTING';
     star: Star;
-    started: Date;
+    started: string;
     currentVotes: number;
 };
 

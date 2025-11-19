@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // Types
 import type { Star, User } from 'src/types';
-import type { ValidateResponse } from './types';
+import type { UploadStarImageArgs, ValidateResponse } from './types';
 
 export const appApi = createApi({
     reducerPath: 'appApi',
@@ -55,7 +55,7 @@ export const appApi = createApi({
             providesTags: (_, error) => !error ? ['Token'] : [],
         }),
 
-        deleteAllTokens: build.mutation<{ affected?: number }, undefined>({
+        deleteAllTokens: build.mutation<{ affected?: number; }, undefined>({
             query: () => ({
                 url: '/tokens/truncate',
                 method: 'DELETE'
@@ -111,6 +111,28 @@ export const appApi = createApi({
             invalidatesTags: (_, error) => !error ? ['Star'] : [],
         }),
 
+        uploadStarImage: build.mutation<undefined, UploadStarImageArgs>({
+            query: ({ id, file }) => {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                return {
+                    url: '/stars/' + id + '/image',
+                    method: 'POST',
+                    body: formData,
+                };
+            },
+            invalidatesTags: (_, error) => !error ? ['Star'] : [],
+        }),
+
+        deleteStarImage: build.mutation<undefined, number>({
+            query: (id) => ({
+                url: '/stars/' + id + '/image',
+                method: 'DELETE'
+            }),
+            invalidatesTags: (_, error) => !error ? ['Star'] : [],
+        }),
+
         // # ==================================================================== #
         // #                                                                      #
         // #                               STATE                                  #
@@ -157,6 +179,8 @@ export const {
     useCreateStarMutation,
     useUpdateStarMutation,
     useDeleteStarMutation,
+    useUploadStarImageMutation,
+    useDeleteStarImageMutation,
 
     useSetIdleStageMutation,
     useSetPerformingStageMutation,

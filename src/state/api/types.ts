@@ -6,3 +6,8 @@ export type ValidateResponse = {
 } | {
     valid: false;
 };
+
+export type UploadStarImageArgs = {
+    id: number;
+    file: File;
+};

@@ -9,6 +9,7 @@ export interface Star {
     name: string;
     field?: string;
     color?: string;
+    image?: string;
 }
 
 export type StageName = 'IDLE' | 'PERFORMING' | 'VOTING' | 'RESULTS';

@@ -4,27 +4,34 @@ import { memo } from 'react';
 import type { Star } from 'src/types';
 
 // Components
-import ElectricBorder from './ElectricBorder';
+import { GlowBorder } from './GlowBorder';
 
 type ComponentProps = {
     star: Star;
-}
+};
 
-export const StarFrame = memo(() => {
+const BASE_URL = import.meta.env.DEV ? `http://${window.location.hostname}:54400/images` : '/images';
+
+export const StarFrame = memo(({ star }: ComponentProps) => {
+    const nameInitials = star.name.split(/\s+/).map(s => s[0]).join('');
+
     return (
-        <ElectricBorder
-            color="#7df9ff"
-            speed={2}
-            chaos={0.3}
-            thickness={4}
-            className="w-5/6 max-w-60 aspect-square rounded-3xl!"
-        >
-            <div>
-                <p style={{ margin: '6px 0 0', opacity: 0.8 }}>
-                    A glowing
-                </p>
-            </div>
+        <GlowBorder style={{ color: star.color ?? 'red' }}>
+            {!star.image && (
+                <div className="avatar avatar-placeholder w-full">
+                    <div className="bg-neutral text-neutral-content w-full rounded-full">
+                        <span className="text-3xl">{nameInitials}</span>
+                    </div>
+                </div>
+            )}
 
-        </ElectricBorder>
+            {star.image && (
+                <div className="avatar w-full">
+                    <div className="w-full rounded-full">
+                        <img src={`${BASE_URL}/${star.image}`} />
+                    </div>
+                </div>
+            )}
+        </GlowBorder>
     );
 });

@@ -1,8 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+// Socket.IO instance
+import { socket } from '../middlewares/socket.middleware';
+
 // Types
 import type { Star, User } from 'src/types';
-import type { UploadStarImageArgs, ValidateResponse } from './types';
+import type { MyVotePayload, MyVoteResponse, UploadStarImageArgs, ValidateResponse, VotePayload } from './types';
 
 export const appApi = createApi({
     reducerPath: 'appApi',
@@ -14,7 +17,7 @@ export const appApi = createApi({
             return headers;
         },
     }),
-    tagTypes: ['Star', 'User', 'Token'],
+    tagTypes: ['Star', 'User', 'Token', 'Vote'],
     endpoints: (build) => ({
         login: build.mutation<User, string>({
             query: (token) => ({
@@ -160,6 +163,31 @@ export const appApi = createApi({
             }),
         }),
 
+        // # ==================================================================== #
+        // #                                                                      #
+        // #                               STATE                                  #
+        // #                                                                      #
+        // # ==================================================================== #
+
+        vote: build.mutation<{ error?: string; }, VotePayload>({
+            queryFn: (payload) => new Promise((resolve) => {
+
+                // TODO: Add types
+                socket.emit('vote', payload, (ack: { error?: string; }) => {
+                    resolve({ data: ack });
+                });
+            }),
+            invalidatesTags: (_, err) => !err ? ['Vote'] : [],
+        }),
+
+        myVote: build.query<number | null, MyVotePayload>({
+            queryFn: (payload) => new Promise((resolve, reject) => {
+                socket.emit('my-vote', payload, (ack: MyVoteResponse) => {
+                    ack.error ? reject(ack.error) : resolve({ data: ack.vote });
+                });
+            }),
+            providesTags: (_, err) => !err ? ['Vote'] : [],
+        })
     })
 });
 
@@ -185,4 +213,8 @@ export const {
     useSetIdleStageMutation,
     useSetPerformingStageMutation,
     useSetVotingStageMutation,
+
+    useVoteMutation,
+    useMyVoteQuery,
+    useLazyMyVoteQuery,
 } = appApi;

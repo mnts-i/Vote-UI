@@ -28,6 +28,7 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
         handleSubmit,
     } = useForm<FormInput>({
         mode: 'all',
+        reValidateMode: 'onChange',
         defaultValues: {
             name: '',
             field: '',
@@ -110,6 +111,7 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
                     type="text"
                     readOnly={isProcessing}
                     className="input w-auto"
+                    autoComplete="off"
                     {...register('name', { minLength: 1, required: true })}
                 />
             </fieldset>
@@ -120,6 +122,7 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
                     type="text"
                     readOnly={isProcessing}
                     className="input w-auto"
+                    autoComplete="off"
                     {...register('field')}
                 />
             </fieldset>
@@ -130,6 +133,7 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
                     type="color"
                     readOnly={isProcessing}
                     className="h-12 w-auto rounded-sm"
+                    autoComplete="off"
                     {...register('color')}
                 />
 

@@ -10,7 +10,7 @@ export const TokenEntry = ({ token }: ComponentProps) => (
             <PiKeyDuotone size={28} />
         </span>
 
-        <div className="flex flex-1 items-center justify-center font-bold text-lg">
+        <div className="flex flex-1 items-center justify-center font-bold text-[16px]">
             {token.toUpperCase()}
         </div>
     </div>

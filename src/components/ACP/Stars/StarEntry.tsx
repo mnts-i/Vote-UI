@@ -1,6 +1,9 @@
 import toast from 'react-hot-toast';
+import { RiCloseFill } from 'react-icons/ri';
 import { FiEdit, FiTrash } from 'react-icons/fi';
-import { useCallback, useEffect, useState } from 'react';
+import { HiOutlineCog6Tooth } from 'react-icons/hi2';
+import { TbPhotoPlus, TbPhotoMinus } from 'react-icons/tb';
+import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react';
 
 // Types
 import type { Star } from 'src/types';
@@ -11,12 +14,19 @@ import { useDeleteStarImageMutation, useDeleteStarMutation, useUploadStarImageMu
 // Components
 import { Modal } from 'src/components/Modal';
 import { StarCrudModal } from './StarCrudModal';
+import classNames from 'classnames';
 
 type ComponentProps = {
     star: Star;
 };
 
+const BASE_URL = import.meta.env.DEV ? `http://${window.location.hostname}:54400/images` : '/images';
+
 export const StarEntry = ({ star }: ComponentProps) => {
+    const nameInitials = star.name.split(/\s+/).map(s => s[0]).join('');
+
+    const fileRef = useRef<HTMLInputElement>(null!);
+
     const [editModalOpened, setEditModalOpened] = useState(false);
     const [deleteStarModalOpened, setDeleteStarModalOpened] = useState(false);
     const [deleteImageModalOpened, setDeleteImageModalOpened] = useState(false);
@@ -27,31 +37,63 @@ export const StarEntry = ({ star }: ComponentProps) => {
     const [uploadImage, { isLoading: isUploading, isSuccess: uploaded }] = useUploadStarImageMutation();
     const [deleteStarImage, { isLoading: isDeletingImage, isSuccess: deletedImage }] = useDeleteStarImageMutation();
 
+    const onUploadClick = () => fileRef.current.click();
+
+    const onUploadChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target?.files?.[0];
+
+        if (file && !isUploading) {
+            uploadImage({ id: star.id, file });
+        }
+    };
+
     useEffect(() => {
-        if (deleted) { toast('Το ταλέντο διαγράφηκε επιτυχώς!', { id: 'acp-stars' }); }
+        if (deleted) {
+            toast('Το ταλέντο διαγράφηκε επιτυχώς!', { id: 'acp-stars' });
+            setDeleteStarModalOpened(false);
+        }
     }, [deleted]);
 
     useEffect(() => {
-        if (deletedImage) { toast('Η φωτογραφία διαγράφηκε επιτυχώς!', { id: 'acp-stars' }); }
+        if (deletedImage) {
+            toast('Η φωτογραφία διαγράφηκε επιτυχώς!', { id: 'acp-stars' });
+            setDeleteImageModalOpened(false);
+        }
     }, [deletedImage]);
 
     useEffect(() => {
-        if (uploaded) { toast('Η φωτογραφία αποθηκεύτηκε επιτυχώς!', { id: 'acp-stars' }); }
+        if (uploaded) {
+            toast('Η φωτογραφία αποθηκεύτηκε επιτυχώς!', { id: 'acp-stars' });
+            fileRef.current.value = '';
+            setDeleteImageModalOpened(false);
+        }
     }, [uploaded]);
 
     return (
         <>
-            <div className="flex flex-col p-4 gap-4 bg-gray-900/50 rounded-xl">
+            <div className="flex p-4 gap-4 items-center bg-gray-900/50 rounded-xl">
                 <div className="flex-1 flex gap-6 items-center overflow-hidden">
-                    {star.color && (
-                        <div className="grow-0 w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: star.color }} />
-                    )}
+                    {(star.color || star.image) && (
+                        <div
+                            className={classNames('avatar w-13 h-13 p-1 rounded-full', {
+                                'avatar-placeholder': !star.image,
+                                'border-3': Boolean(star.color)
+                            })}
+                            style={{
+                                borderColor: star.color || undefined
+                            }}
+                        >
+                            {star.image && (
+                                <img src={BASE_URL + '/' + star.image} className="rounded-full" />
+                            )}
 
-                    {/* <div className="avatar">
-                            <div className="ring-primary ring-offset-base-100 w-24 rounded-full ring-2 ring-offset-2">
-                                <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp" />
-                            </div>
-                        </div> */}
+                            {!star.image && (
+                                <div className="bg-gray-900/80 text-gray-400 rounded-full">
+                                    <span className="text-md">{nameInitials}</span>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     <div className="flex flex-col gap-0">
                         <span className="flex-1 text-sm text-gray-300 truncate">
@@ -64,33 +106,54 @@ export const StarEntry = ({ star }: ComponentProps) => {
                     </div>
                 </div>
 
-                <div className="flex gap-2">
+                <input
+                    ref={fileRef}
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    onChange={onUploadChange}
+                    style={{ display: 'none' }}
+                />
+
+                <div className="fab fab-flower relative bottom-0 right-0 left-0">
+                    {/* a focusable div with tabIndex is necessary to work on all browsers. role="button" is necessary for accessibility */}
+                    <div tabIndex={0} role="button" className="btn btn-md btn-circle btn-primary btn-soft">
+                        <HiOutlineCog6Tooth size={24} />
+                    </div>
+
+                    {/* Main Action button replaces the original button when FAB is open */}
+                    <div className="fab-close">
+                        <span className="btn btn-circle btn-md">
+                            <RiCloseFill size={24} />
+                        </span>
+                    </div>
+
+                    {/* buttons that show up when FAB is open */}
                     <button
+                        className="btn btn-md btn-circle btn-primary"
+                        onClick={() => setEditModalOpened(true)}
+                    >
+                        <FiEdit size={16} />
+                    </button>
+                    <button
+                        className="btn btn-md btn-circle btn-primary"
+                        disabled={isUploading || isDeletingImage}
+                        onClick={onUploadClick}
+                    >
+                        <TbPhotoPlus size={18} />
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-md btn-circle btn-warning"
+                        disabled={isUploading || isDeletingImage || !star.image}
+                        onClick={() => setDeleteImageModalOpened(true)}
+                    >
+                        <TbPhotoMinus size={18} />
+                    </button>
+                    <button
+                        className="btn btn-md btn-circle btn-error"
                         onClick={() => setDeleteStarModalOpened(true)}
-                        className="btn btn-error btn-sm btn-square grow"
                     >
                         <FiTrash size={16} />
-                    </button>
-
-                    <button
-                        onClick={() => setEditModalOpened(true)}
-                        className="btn btn-primary btn-sm btn-square grow"
-                    >
-                        <FiEdit size={16} />
-                    </button>
-
-                    <button
-                        onClick={() => setEditModalOpened(true)}
-                        className="btn btn-primary btn-sm btn-square grow"
-                    >
-                        <FiEdit size={16} />
-                    </button>
-
-                    <button
-                        onClick={() => setEditModalOpened(true)}
-                        className="btn btn-primary btn-sm btn-square grow"
-                    >
-                        <FiEdit size={16} />
                     </button>
                 </div>
             </div>
@@ -130,7 +193,7 @@ export const StarEntry = ({ star }: ComponentProps) => {
                 </Modal>
             )}
 
-            {deleteImageModalOpened && star.image && (
+            {deleteImageModalOpened && (
                 <Modal open={deleteImageModalOpened} onClose={() => setDeleteImageModalOpened(false)} center>
                     <h3 className="font-bold text-lg">Προσοχή!</h3>
                     <p className="py-6">
@@ -139,8 +202,8 @@ export const StarEntry = ({ star }: ComponentProps) => {
                     <div className="flex justify-between">
                         <button
                             className="btn btn-error"
-                            onClick={() => deleteStar(star.id)}
-                            disabled={!deleteStarModalOpened || isDeleting || isDeletingImage || isUploading}
+                            onClick={() => deleteStarImage(star.id)}
+                            disabled={!deleteImageModalOpened || !star.image || isDeleting || isDeletingImage || isUploading}
                         >
                             {isDeletingImage && (
                                 <span className="loading loading-spinner"></span>

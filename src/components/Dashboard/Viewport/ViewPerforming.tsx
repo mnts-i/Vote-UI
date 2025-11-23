@@ -12,13 +12,23 @@ export const ViewPerforming = () => {
         return null;
     }
 
+    const star = backendState.star;
+
     return (
-        <div className="flex flex-col gap-10 w-full items-center justify-center">
+        <div className="flex flex-col gap-5 w-full items-center justify-center">
             <StarFrame star={backendState.star} />
-            
-            <span className="text-xl font-semibold text-gray-200">
-                {backendState.star.name}
-            </span>
+
+            <div className="flex flex-col pt-8 gap-0 justify-center items-center">
+                <span className="text-2xl font-semibold text-gray-200">
+                    {star.name}
+                </span>
+
+                {star.field && (
+                    <span className="text-sm text-gray-400">
+                        {star.field}
+                    </span>
+                )}
+            </div>
         </div>
     );
 };

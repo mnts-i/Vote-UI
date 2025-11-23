@@ -68,7 +68,7 @@ export const Login = () => {
 
                         <input
                             type="password"
-                            maxLength={12}
+                            maxLength={11}
                             className="grow uppercase text-center"
                             autoComplete="off"
                             autoFocus

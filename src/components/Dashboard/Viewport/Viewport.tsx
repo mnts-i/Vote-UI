@@ -12,7 +12,7 @@ export const Viewport = () => {
     const backendState = useAppSelector(state => state.app.backendState);
 
     return (
-        <div className="flex px-4 py-14 justify-center items-center select-none">
+        <div className="flex px-4 py-9 justify-center items-center select-none">
             {backendState.stage === 'IDLE' && (
                 <ViewIdle />
             )}

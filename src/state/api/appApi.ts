@@ -163,6 +163,13 @@ export const appApi = createApi({
             }),
         }),
 
+        setResultsStage: build.mutation({
+            query: () => ({
+                url: '/state/results',
+                method: 'POST'
+            }),
+        }),
+
         // # ==================================================================== #
         // #                                                                      #
         // #                               STATE                                  #
@@ -213,6 +220,7 @@ export const {
     useSetIdleStageMutation,
     useSetPerformingStageMutation,
     useSetVotingStageMutation,
+    useSetResultsStageMutation,
 
     useVoteMutation,
     useMyVoteQuery,

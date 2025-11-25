@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 // State
@@ -19,7 +19,7 @@ export const ViewVoting = () => {
     const backendState = useAppSelector(state => state.app.backendState);
 
     const [fetchMyVote, { data: rating, isFetching: isFetchingVote }] = useLazyMyVoteQuery();
-    const [vote, { data: voteResponse, isLoading: isVoting, isSuccess: voted }] = useVoteMutation();
+    const [vote, { data: voteResponse, isLoading: isVoting }] = useVoteMutation();
 
     useEffect(() => {
         if (!user) {
@@ -29,21 +29,21 @@ export const ViewVoting = () => {
     }, [dispatch, user]);
 
     useEffect(() => {
-        if (voteResponse && typeof voteResponse.error === 'string') {
-            toast(voteResponse.error, { id: 'voting' });
+        if (!voteResponse) {
+            return;
         }
-    }, [voteResponse]);
 
-    useEffect(() => {
-        if (voted) {
-            toast('Η ψήφος σου καταχωρήθηκε!', { id: 'voting', icon: '😎' })
-        }
-    }, [voted]);
+        typeof voteResponse.error === 'string'
+            ? toast(voteResponse.error, { id: 'voting', icon: '😟' })
+            : toast('Η ψήφος σου καταχωρήθηκε!', { id: 'voting', icon: '😎' });
+    }, [voteResponse]);
 
     useEffect(() => {
         if (backendState.stage !== 'VOTING' || !user) {
             return;
         }
+
+        console.log('Fetching personal vote for star: ' + backendState.star.name);
 
         fetchMyVote({
             token: user.token,
@@ -97,7 +97,7 @@ export const ViewVoting = () => {
 
                 <div className="flex h-[76px] w-[76px] items-center justify-center absolute -top-2 -right-5 bg-primary rounded-full ring-3 ring-purple-800/50">
                     {!cannotVote && (
-                        <span className="text-3xl font-black text-purple-100">
+                        <span className="text-[36px] font-black text-purple-100 font-[Spicy_Sale]">
                             {typeof rating === 'number' ? rating / 2 : '--'}
                         </span>
                     )}

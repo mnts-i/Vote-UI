@@ -24,10 +24,11 @@ export const useQrCodeScanner = () => {
                     alert(decodedText);
                     alert(decodedResult);
                 },
-                (errorMessage) => {
+                (_errorMessage) => {
                     // parse error, ignore it.
                 });
         } catch (err) {
+            // @ts-ignore
             toast.error(typeof err === 'string' ? err : err.message, { id: 'error' });
         }
     }, []);

@@ -41,8 +41,9 @@ export interface Results extends BaseState {
     stars: Array<
         Star & {
             state: 'WAITING' | 'COUNTING' | 'FINISHED';
-            votes: number[];
-            started: number | null;
+            started: string | null;
+            totalScore: number;
+            totalVotes: number;
         }
     >;
 };

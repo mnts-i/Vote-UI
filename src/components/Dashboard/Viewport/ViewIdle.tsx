@@ -28,7 +28,7 @@ export const ViewIdle = () => {
 
             <div className="flex items-center w-full h-40 -mt-16">
                 <CurvedLoop
-                    marqueeText="Καλωσηρθεσ ✦ Talent Show ✦ Ποδοχωρι ✦"
+                    marqueeText="Καλωσηρθεσ ✦ Talent Show ✦ Γυμνασιο Ποδοχωριου ✦"
                     speed={2}
                     curveAmount={400}
                     interactive={false}

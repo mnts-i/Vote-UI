@@ -9,6 +9,8 @@ export const ViewResults = () => {
         return null;
     }
 
+    
+
     return (
         <div>
 

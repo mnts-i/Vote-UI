@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { Outlet } from 'react-router';
+import { ErrorBoundary } from 'react-error-boundary';
 import toast, { Toaster, resolveValue } from 'react-hot-toast';
 
 // DayJS locale
@@ -34,7 +35,13 @@ export const Root = () => {
                 />
             </div>
 
-            <Outlet />
+            <ErrorBoundary fallbackRender={({ error }) => (
+                <div className="p-4 bg-red-500/20 text-red-800">
+                    {error.message}
+                </div>
+            )}>
+                <Outlet />
+            </ErrorBoundary>
 
             <Toaster
                 toastOptions={{

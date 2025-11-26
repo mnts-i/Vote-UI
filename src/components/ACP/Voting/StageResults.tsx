@@ -41,7 +41,7 @@ export const StageResults = () => {
             return entry;
         }
 
-        return out.totalScore >= entry.totalScore ? out : entry;
+        return out.shrunkScore >= entry.shrunkScore ? out : entry;
     }, null) : null;
 
     return (
@@ -80,12 +80,12 @@ export const StageResults = () => {
                             ΝΙΚΗΤΗΣ
                         </span>
 
-                        <span>
+                        <span className="flex flex-col gap-0.5">
                             {winningEntry?.name ?? '-'}
 
                             {winningEntry && (
-                                <span className="pl-4 text-xs! font-normal text-blue-200!">
-                                    ( Score: {winningEntry.totalScore.toLocaleString()} &middot; Ψήφοι: {winningEntry.totalVotes} )
+                                <span className="text-xs! font-normal text-blue-200!">
+                                    ( Total: {winningEntry.totalScore / 2} &middot; Ψήφοι: {winningEntry.totalVotes} &middot; Avg: {winningEntry.avg / 2} &middot; Shrunk: {winningEntry.shrunkScore / 2} )
                                 </span>
                             )}
                         </span>

@@ -26,8 +26,8 @@ import { glassStyles } from './shared';
 
 export const Root = () => {
     return (
-        <div className="flex flex-col w-[100dvw] h-[100dvh] overflow-x-hidden relative z-30">
-            <div className="fixed w-[100dvw] h-[100dvh] -z-10">
+        <div className="flex flex-col w-dvw h-dvh overflow-x-hidden relative z-30">
+            <div className="fixed w-dvw h-dvh -z-10">
                 <Background
                     particleCount={400}
                     particleBaseSize={200}

@@ -1,4 +1,11 @@
+import utc from 'dayjs/plugin/utc';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import { animate } from 'animejs';
 import { useEffect } from 'react';
+
+dayjs.extend(utc);
+dayjs.extend(duration);
 
 // Types
 import type { Results } from 'src/types';
@@ -17,7 +24,18 @@ const MIN_WIDTH = 20;
 
 export const ResultEntry = ({ entry, position, maxScore, countDuration }: ComponentProps) => {
     useEffect(() => {
+        const target = `star_score_${entry.id}`;
+        const percent = entry.shrunkScore / maxScore;
+        const targetWidth = MIN_WIDTH + percent * 100;
 
+        const diff = dayjs().diff(entry.started, 'milliseconds');
+
+        animate(target, {
+            ease: 'inQuint',
+            width: targetWidth + 'px',
+            autoplay: true,
+            duration: countDuration - diff,
+        });
     }, []);
 
     return (
@@ -52,6 +70,7 @@ export const ResultEntry = ({ entry, position, maxScore, countDuration }: Compon
 
             <div className="h-2 bg-black/20 absolute bottom-0 left-0 right-0 overflow-hidden">
                 <div
+                    id={`star_score_${entry.id}`}
                     className="h-full w-1/2 bg-primary"
                 />
             </div>

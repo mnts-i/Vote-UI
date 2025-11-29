@@ -28,7 +28,14 @@ export const ViewResults = () => {
 
             {!completed && currentStar && (
                 <div>
-                    {currentStar.name}
+                    {/* {currentStar.name} */}
+
+                    <ResultEntry
+                        entry={currentStar}
+                        position={1 + 1}
+                        maxScore={maxScore}
+                        countDuration={backendState.countDuration}
+                    />
                 </div>
             )}
 

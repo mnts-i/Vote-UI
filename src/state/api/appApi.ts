@@ -136,6 +136,15 @@ export const appApi = createApi({
             invalidatesTags: (_, error) => !error ? ['Star'] : [],
         }),
 
+        reorderStars: build.mutation<undefined, { ids: number[]; }>({
+            query: (body) => ({
+                url: '/stars/reorder',
+                method: 'POST',
+                body
+            }),
+            invalidatesTags: (_, error) => !error ? ['Star'] : [],
+        }),
+
         // # ==================================================================== #
         // #                                                                      #
         // #                               STATE                                  #
@@ -216,6 +225,7 @@ export const {
     useDeleteStarMutation,
     useUploadStarImageMutation,
     useDeleteStarImageMutation,
+    useReorderStarsMutation,
 
     useSetIdleStageMutation,
     useSetPerformingStageMutation,

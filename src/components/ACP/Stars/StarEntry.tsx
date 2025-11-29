@@ -1,9 +1,13 @@
 import toast from 'react-hot-toast';
+import classNames from 'classnames';
+import { CSS } from '@dnd-kit/utilities';
 import { RiCloseFill } from 'react-icons/ri';
+import { useSortable } from '@dnd-kit/sortable';
 import { FiEdit, FiTrash } from 'react-icons/fi';
 import { HiOutlineCog6Tooth } from 'react-icons/hi2';
+import { MdOutlineDragIndicator } from 'react-icons/md';
 import { TbPhotoPlus, TbPhotoMinus } from 'react-icons/tb';
-import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type ChangeEvent, type CSSProperties } from 'react';
 
 // Types
 import type { Star } from 'src/types';
@@ -14,7 +18,6 @@ import { useDeleteStarImageMutation, useDeleteStarMutation, useUploadStarImageMu
 // Components
 import { Modal } from 'src/components/Modal';
 import { StarCrudModal } from './StarCrudModal';
-import classNames from 'classnames';
 
 type ComponentProps = {
     star: Star;
@@ -36,6 +39,21 @@ export const StarEntry = ({ star }: ComponentProps) => {
     const [deleteStar, { isLoading: isDeleting, isSuccess: deleted }] = useDeleteStarMutation();
     const [uploadImage, { isLoading: isUploading, isSuccess: uploaded }] = useUploadStarImageMutation();
     const [deleteStarImage, { isLoading: isDeletingImage, isSuccess: deletedImage }] = useDeleteStarImageMutation();
+
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: star.id });
+
+    const sortStyling: CSSProperties = {
+        transform: CSS.Transform.toString(transform),
+        touchAction: 'manipulation',
+        transition,
+    };
 
     const onUploadClick = () => fileRef.current.click();
 
@@ -71,7 +89,16 @@ export const StarEntry = ({ star }: ComponentProps) => {
 
     return (
         <>
-            <div className="flex p-4 gap-4 items-center bg-gray-900/50 rounded-xl">
+            <div
+                ref={setNodeRef}
+                className={classNames('flex p-4 gap-4 items-center rounded-xl relative select-none', {
+                    'z-50': isDragging,
+                    'shadow-lg': isDragging,
+                    'bg-gray-900/95': isDragging,
+                    'bg-gray-900/50': !isDragging,
+                })}
+                style={sortStyling}
+            >
                 <div className="flex-1 flex gap-6 items-center overflow-hidden">
                     {(star.color || star.image) && (
                         <div
@@ -114,7 +141,7 @@ export const StarEntry = ({ star }: ComponentProps) => {
                     style={{ display: 'none' }}
                 />
 
-                <div className="fab fab-flower relative bottom-0 right-0 left-0">
+                <div className="fab fab-flower relative bottom-0 right-0 left-0 mr-9">
                     {/* a focusable div with tabIndex is necessary to work on all browsers. role="button" is necessary for accessibility */}
                     <div tabIndex={0} role="button" className="btn btn-md btn-circle btn-primary btn-soft">
                         <HiOutlineCog6Tooth size={24} />
@@ -155,6 +182,15 @@ export const StarEntry = ({ star }: ComponentProps) => {
                     >
                         <FiTrash size={16} />
                     </button>
+                </div>
+
+                <div
+                    className="flex items-center justify-center w-10 absolute right-0 top-0 bottom-0 bg-gray-900/80 rounded-r-xl text-gray-600"
+                    style={{ touchAction: 'none' }}
+                    {...attributes}
+                    {...listeners}
+                >
+                    <MdOutlineDragIndicator size={26} />
                 </div>
             </div>
 

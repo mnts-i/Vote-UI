@@ -172,9 +172,9 @@ export const appApi = createApi({
             }),
         }),
 
-        setResultsStage: build.mutation({
-            query: () => ({
-                url: '/state/results',
+        setResultsStage: build.mutation<void, number>({
+            query: (duration) => ({
+                url: '/state/results/' + duration,
                 method: 'POST'
             }),
         }),

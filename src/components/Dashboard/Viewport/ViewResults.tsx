@@ -1,4 +1,4 @@
-import { Flipper, Flipped } from 'react-flip-toolkit';
+import { motion } from 'motion/react';
 
 // State
 import { useAppSelector } from 'src/state/store';
@@ -13,35 +13,19 @@ export const ViewResults = () => {
         return null;
     }
 
-    const maxScore = backendState.biggestShrunk;
-
     return (
-        <div className="flex-auto flex flex-col gap-2 -my-5">
-            {backendState.finished && (
-                <div className="flex gap-2">
-                    COMPLETE!
-                </div>
-            )}
-
-            {/* <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(130px,1fr))] relative">
-                {gridBoxes}
-                {entries}
-            </div> */}
-
-            <Flipper
-                flipKey={backendState.stars.map(s => s.id).join(',')}
-            >
-                <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(130px,1fr))] relative">
-                    {backendState.stars.map((entry, idx) => (
-                        <Flipped flipId={'star_' + entry.id} key={entry.id}>
-                            <ResultEntry
-                                entry={entry}
-                                position={idx}
-                            />
-                        </Flipped>
-                    ))}
-                </div>
-            </Flipper>
+        <div
+            className="flex-auto -my-5 grid gap-1.5 grid-cols-[repeat(auto-fit,minmax(130px,1fr))] "
+        >
+            {backendState.stars.map((entry, idx) => (
+                <motion.div key={entry.id} layout>
+                    <ResultEntry
+                        entry={entry}
+                        position={idx}
+                        finished={backendState.finished}
+                    />
+                </motion.div>
+            ))}
         </div>
     );
 };

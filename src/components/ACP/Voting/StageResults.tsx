@@ -1,6 +1,6 @@
 import toast from 'react-hot-toast';
 import { useAppSelector } from 'src/state/store';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type ChangeEventHandler } from 'react';
 
 // State
 import { useSetResultsStageMutation } from 'src/state/api/appApi';
@@ -12,14 +12,29 @@ import { type Results } from 'src/types';
 import { Modal } from 'src/components/Modal';
 import { StageCard } from './StageCard';
 
+const NUMBER_REGEX = new RegExp(/^[0-9]*$/);
+
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
 export const StageResults = () => {
     const backendState = useAppSelector(state => state.app.backendState);
     const isSelected = backendState.stage === 'RESULTS';
 
+    const [duration, setDuration] = useState(90);
     const [modalOpened, setModalOpened] = useState(false);
     const [setStage, { isLoading, isSuccess }] = useSetResultsStageMutation();
 
     const onCardClick = () => setModalOpened(true);
+
+    const onCountChange = useCallback<ChangeEventHandler<HTMLInputElement>>((e) => {
+        const value = e.target.value.trim();
+
+        if (!NUMBER_REGEX.test(value)) {
+            return;
+        }
+
+        setDuration(value === '' ? +value : clamp(+value, 1, 600000));
+    }, []);
 
     useEffect(() => {
         if (isSuccess) {
@@ -96,11 +111,23 @@ export const StageResults = () => {
                         Θέλετε σίγουρα να ξεκινήσει η διαδικασία προβολής αποτελεσμάτων;
                     </p>
 
+                    <div className="flex flex-col gap-1">
+                        <span className="text-xs font-bold">
+                            Διάρκεια (δευτερόλεπτα)
+                        </span>
+                        <input
+                            type="tel"
+                            value={duration}
+                            className="input w-auto"
+                            onChange={onCountChange}
+                        />
+                    </div>
+
                     <div className="flex gap-2 justify-between">
                         <button
                             className="btn btn-primary"
                             disabled={!modalOpened || isLoading}
-                            onClick={() => setStage(undefined)}
+                            onClick={() => setStage(duration * 1000)}
                         >
                             Εφαρμογή
                         </button>

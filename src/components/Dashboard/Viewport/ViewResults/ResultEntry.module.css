@@ -1,0 +1,71 @@
+.gold::before,
+.silver::before,
+.bronze::before {
+    content: ' ';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    animation: rotate 6s infinite linear;
+}
+
+.gold::before {
+    background: conic-gradient(#FFD700 0deg, transparent 90deg);
+}
+
+.silver::before {
+    background: conic-gradient(#C0C0C0 0deg, transparent 90deg);
+}
+
+.bronze::before {
+    background: conic-gradient(#CD7F32 0deg, transparent 90deg);
+}
+
+.star {
+    position: fixed;
+    z-index: 1000;
+    transition: filter .25s;
+}
+
+.animated {
+    animation: jiggle 1s infinite;
+}
+
+@keyframes jiggle {
+    0% {
+        transform: translateX(0)
+    }
+
+    25% {
+        transform: translateY(-2px)
+    }
+
+    35% {
+        transform: translateY(-2px) rotate(2deg)
+    }
+
+    55% {
+        transform: translateY(-2px) rotate(-2deg)
+    }
+
+    65% {
+        transform: translateY(-2px) rotate(2deg)
+    }
+
+    75% {
+        transform: translateY(-2px) rotate(-2deg)
+    }
+
+    100% {
+        transform: translateY(0) rotate(0)
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg) scale(5);
+    }
+
+    100% {
+        transform: rotate(-360deg) scale(5);
+    }
+}

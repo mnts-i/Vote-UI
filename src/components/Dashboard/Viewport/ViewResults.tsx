@@ -1,7 +1,9 @@
+import { Flipper, Flipped } from 'react-flip-toolkit';
 
 // State
-import { useMemo } from 'react';
 import { useAppSelector } from 'src/state/store';
+
+// Components
 import { ResultEntry } from './ViewResults/ResultEntry';
 
 export const ViewResults = () => {
@@ -13,43 +15,33 @@ export const ViewResults = () => {
 
     const maxScore = backendState.biggestShrunk;
 
-    const completed = useMemo(() => backendState.stars.findIndex(s => s.state !== 'FINISHED') === -1, [backendState]);
-
-    const currentStar = useMemo(() => backendState.stars.find(s => s.state === 'COUNTING'), [backendState]);
-    const finishedStars = useMemo(() => backendState.stars.filter(s => s.state === 'FINISHED').sort((a, b) => a.shrunkScore - b.shrunkScore), [backendState]);
-
     return (
-        <div className="flex-auto flex flex-col gap-2">
-            {completed && (
+        <div className="flex-auto flex flex-col gap-2 -my-5">
+            {backendState.finished && (
                 <div className="flex gap-2">
                     COMPLETE!
                 </div>
             )}
 
-            {!completed && currentStar && (
-                <div>
-                    {/* {currentStar.name} */}
+            {/* <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(130px,1fr))] relative">
+                {gridBoxes}
+                {entries}
+            </div> */}
 
-                    <ResultEntry
-                        entry={currentStar}
-                        position={1 + 1}
-                        maxScore={maxScore}
-                        countDuration={backendState.countDuration}
-                    />
+            <Flipper
+                flipKey={backendState.stars.map(s => s.id).join(',')}
+            >
+                <div className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(130px,1fr))] relative">
+                    {backendState.stars.map((entry, idx) => (
+                        <Flipped flipId={'star_' + entry.id} key={entry.id}>
+                            <ResultEntry
+                                entry={entry}
+                                position={idx}
+                            />
+                        </Flipped>
+                    ))}
                 </div>
-            )}
-
-            <div className="flex flex-col gap-1.5">
-                {finishedStars.map((entry, idx) => (
-                    <ResultEntry
-                        key={entry.id}
-                        entry={entry}
-                        position={idx + 1}
-                        maxScore={maxScore}
-                        countDuration={backendState.countDuration}
-                    />
-                ))}
-            </div>
+            </Flipper>
         </div>
     );
 };

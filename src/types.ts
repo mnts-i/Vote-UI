@@ -36,18 +36,20 @@ export interface Voting extends BaseState {
 
 export interface Results extends BaseState {
     stage: 'RESULTS';
+    started: string;
+    progress: number;
+    finished: boolean;
     biggestAvg: number;
     biggestScore: number;
     biggestShrunk: number;
-    countDuration: number;
     stars: Array<
         Star & {
-            state: 'WAITING' | 'COUNTING' | 'FINISHED';
-            started: string | null;
             avg: number;
+            animating: boolean;
             totalScore: number;
             totalVotes: number;
             shrunkScore: number;
+            visibleScore: number;
         }
     >;
 };

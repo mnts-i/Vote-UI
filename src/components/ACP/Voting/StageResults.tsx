@@ -35,7 +35,6 @@ export const StageResults = () => {
         }
     }, [isSuccess]);
 
-    const showingStar = isSelected ? backendState.stars.find(s => s.state === 'COUNTING') : null;
     const winningEntry = isSelected ? backendState.stars.reduce<Results['stars'][number] | null>((out, entry) => {
         if (!out) {
             return entry;
@@ -53,43 +52,37 @@ export const StageResults = () => {
                 onClick={onCardClick}
             >
                 {isSelected && (
-                    <span className="flex flex-col gap-0.5 px-3 py-2 mt-1 text-sm font-bold bg-blue-500/30 text-blue-200 rounded-sm">
-                        <span className="text-xs text-blue-300 font-light">
-                            ΠΡΟΒΑΛΛΕΤΑΙ
-                        </span>
+                    <div className="flex flex-col gap-3 p-3 mt-1 text-sm font-bold bg-blue-500/30 text-blue-200 rounded-sm">
+                        {!backendState.finished && (
+                            <span className="flex flex-col items-center gap-1 p-3 bg-blue-300/30 rounded-sm">
+                                <span className="loading loading-spinner loading-md" />
 
-                        <span className="flex items-center gap-2">
-                            {showingStar && (
-                                <>
-                                    <span className="loading loading-spinner loading-xs" />
-
-                                    <span>
-                                    {showingStar.name}
-                                    </span>
-                                </>
-                            )}
-
-                            {!showingStar && (
-                                <span className="text-blue-200">
-                                    Τέλος προβολής
+                                <span className="text-xs">
+                                    Προβολή σε Εξέλιξη
                                 </span>
-                            )}
-                        </span>
 
-                        <span className="text-xs text-blue-300 font-light pt-3">
-                            ΝΙΚΗΤΗΣ
-                        </span>
+                                <span className="text-xs text-blue-200/50">
+                                    {backendState.progress.toFixed(2)}%
+                                </span>
+                            </span>
+                        )}
 
                         <span className="flex flex-col gap-0.5">
-                            {winningEntry?.name ?? '-'}
+                            <span className="text-xs text-blue-300 font-light">
+                                ΝΙΚΗΤΗΣ
+                            </span>
 
-                            {winningEntry && (
-                                <span className="text-xs! font-normal text-blue-200!">
-                                    ( Total: {winningEntry.totalScore / 2} &middot; Ψήφοι: {winningEntry.totalVotes} &middot; Avg: {winningEntry.avg / 2} &middot; Shrunk: {winningEntry.shrunkScore / 2} )
-                                </span>
-                            )}
+                            <span className="flex flex-col gap-0.5">
+                                {winningEntry?.name ?? '-'}
+
+                                {winningEntry && (
+                                    <span className="text-xs! font-normal text-blue-200!">
+                                        ( Total: {winningEntry.totalScore / 2} &middot; Ψήφοι: {winningEntry.totalVotes} &middot; Avg: {winningEntry.avg / 2} &middot; Shrunk: {(winningEntry.shrunkScore / 2).toFixed(2)} )
+                                    </span>
+                                )}
+                            </span>
                         </span>
-                    </span>
+                    </div>
                 )}
             </StageCard>
 

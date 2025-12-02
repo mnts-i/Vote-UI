@@ -18,7 +18,7 @@ import 'animate.css';
 import 'react-responsive-modal/styles.css';
 
 // Application CSS
-import './assets/app.scss';
+import './assets/app.css';
 
 // Components
 import { Background } from './components/Background';

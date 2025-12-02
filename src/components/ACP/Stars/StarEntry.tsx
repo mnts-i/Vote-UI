@@ -111,7 +111,9 @@ export const StarEntry = ({ star }: ComponentProps) => {
                             }}
                         >
                             {isUploading && (
-                                <div className="loading loading-spinner loading-xl" />
+                                <div className="flex items-center justify-center">
+                                    <div className="loading loading-ring loading-md text-gray-400" />
+                                </div>
                             )}
 
                             {star.image && !isUploading && (

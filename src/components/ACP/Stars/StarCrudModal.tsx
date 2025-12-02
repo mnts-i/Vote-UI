@@ -32,7 +32,7 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
         defaultValues: {
             name: '',
             field: '',
-            color: '',
+            color: '#ffffff',
         }
     });
 
@@ -136,14 +136,6 @@ export const StarCrudModal = ({ id, onClose }: ComponentProps) => {
                     autoComplete="off"
                     {...register('color')}
                 />
-
-                <button
-                    type="button"
-                    onClick={() => setValue('color', '')}
-                    className="btn btn-sm btn-block btn-ghost"
-                >
-                    Κατάργηση χρώματος
-                </button>
             </fieldset>
 
             <button

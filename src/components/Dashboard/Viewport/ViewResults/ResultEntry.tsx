@@ -119,8 +119,8 @@ export const ResultEntry = memo(({ entry, finished, position }: ComponentProps) 
                 </div>
 
                 <div className="grow-0 h-[50px] flex flex-col gap-0.5 font-bold items-center justify-center bg-gray-950/50 rounded-sm">
-                    <div className="flex flex-col items-center justify-center overflow-hidden">
-                        <span className="flex-auto text-sm text-gray-200 truncate overflow-hidden">
+                    <div className="w-full px-1 text-center truncate!">
+                        <span className="text-sm text-gray-200">
                             {entry.name}
                         </span>
                     </div>

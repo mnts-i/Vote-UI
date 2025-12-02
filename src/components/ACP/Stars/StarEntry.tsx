@@ -128,8 +128,8 @@ export const StarEntry = ({ star }: ComponentProps) => {
                         </div>
                     )}
 
-                    <div className="flex flex-col gap-0">
-                        <span className="flex-1 text-sm text-gray-300 truncate">
+                    <div className="flex flex-col gap-0 overflow-hidden">
+                        <span className="flex-1 text-sm text-gray-300 truncate!">
                             {star.name}
                         </span>
 

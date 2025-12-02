@@ -110,11 +110,15 @@ export const StarEntry = ({ star }: ComponentProps) => {
                                 borderColor: star.color || undefined
                             }}
                         >
-                            {star.image && (
+                            {isUploading && (
+                                <div className="loading loading-spinner loading-xl" />
+                            )}
+
+                            {star.image && !isUploading && (
                                 <img src={BASE_URL + '/' + star.image} className="rounded-full" />
                             )}
 
-                            {!star.image && (
+                            {!star.image && !isUploading && (
                                 <div className="bg-gray-900/80 text-gray-400 rounded-full">
                                     <span className="text-md">{nameInitials}</span>
                                 </div>
@@ -166,7 +170,7 @@ export const StarEntry = ({ star }: ComponentProps) => {
                         disabled={isUploading || isDeletingImage}
                         onClick={onUploadClick}
                     >
-                        <TbPhotoPlus size={18} />
+                        {isUploading ? <span className="loading loading-spinner loading-sm" /> : <TbPhotoPlus size={18} />}
                     </button>
                     <button
                         type="button"

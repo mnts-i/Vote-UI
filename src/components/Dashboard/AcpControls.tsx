@@ -26,7 +26,9 @@ export const AcpControls = () => {
                         ['bg-white/20']: isActive,
                     })}
                 >
-                    <HiOutlineHome size={20} />
+                    {({ isTransitioning, isPending }) => (
+                        !isTransitioning && !isPending ? <HiOutlineHome size={20} /> : <div className="loading loading-spinner loading-sm" />
+                    )}
                 </NavLink>
             </div>
 
@@ -37,7 +39,9 @@ export const AcpControls = () => {
                         ['bg-white/20']: isActive,
                     })}
                 >
-                    <PiUsers size={20} />
+                    {({ isTransitioning, isPending }) => (
+                        !isTransitioning && !isPending ? <PiUsers size={20} /> : <div className="loading loading-spinner loading-sm" />
+                    )}
                 </NavLink>
             </div>
 
@@ -49,7 +53,9 @@ export const AcpControls = () => {
 
                     })}
                 >
-                    <PiStar size={20} />
+                    {({ isTransitioning, isPending }) => (
+                        !isTransitioning && !isPending ? <PiStar size={20} /> : <div className="loading loading-spinner loading-sm" />
+                    )}
                 </NavLink>
             </div>
 
@@ -61,7 +67,9 @@ export const AcpControls = () => {
 
                     })}
                 >
-                    <PiGearSix size={20} />
+                    {({ isTransitioning, isPending }) => (
+                        !isTransitioning && !isPending ? <PiGearSix size={20} /> : <div className="loading loading-spinner loading-sm" />
+                    )}
                 </NavLink>
             </div>
         </div>

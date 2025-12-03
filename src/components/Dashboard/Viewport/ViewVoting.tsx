@@ -18,8 +18,10 @@ export const ViewVoting = () => {
     const user = useAppSelector(state => state.app.user);
     const backendState = useAppSelector(state => state.app.backendState);
 
-    const [fetchMyVote, { data: rating, isFetching: isFetchingVote }] = useLazyMyVoteQuery();
     const [vote, { data: voteResponse, isLoading: isVoting }] = useVoteMutation();
+    const [fetchMyVote, { data: rating, isFetching: isFetchingVote }] = useLazyMyVoteQuery();
+
+    const starId = backendState.stage === 'VOTING' ? backendState.star.id : null;
 
     useEffect(() => {
         if (!user) {
@@ -39,17 +41,11 @@ export const ViewVoting = () => {
     }, [voteResponse]);
 
     useEffect(() => {
-        if (backendState.stage !== 'VOTING' || !user) {
-            return;
+        if (user && typeof starId === 'number') {
+            console.log('Fetching personal vote for star: ' + starId);
+            fetchMyVote({ starId, token: user.token }, false);
         }
-
-        console.log('Fetching personal vote for star: ' + backendState.star.name);
-
-        fetchMyVote({
-            token: user.token,
-            starId: backendState.star.id,
-        }, false);
-    }, [backendState, user]);
+    }, [starId, user]);
 
     const cannotVote = isFetchingVote || isVoting;
 

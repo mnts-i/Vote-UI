@@ -107,9 +107,9 @@ export const ViewVoting = () => {
             </div>
 
             <div className="flex flex-col gap-0 pt-3 justify-center items-center">
-                <span className="text-2xl font-semibold text-gray-200">
+                <div className="text-2xl font-semibold text-gray-200 text-center">
                     {star.name}
-                </span>
+                </div>
 
                 {star.field && (
                     <span className="text-sm text-gray-400">

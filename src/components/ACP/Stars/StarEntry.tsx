@@ -102,7 +102,7 @@ export const StarEntry = ({ star }: ComponentProps) => {
                 <div className="flex-1 flex gap-6 items-center overflow-hidden">
                     {(star.color || star.image) && (
                         <div
-                            className={classNames('avatar w-13 h-13 p-1 rounded-full', {
+                            className={classNames('shrink-0 avatar w-13 h-13 p-1 rounded-full', {
                                 'avatar-placeholder': !star.image,
                                 'border-3': Boolean(star.color)
                             })}
